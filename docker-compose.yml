@@ -1,0 +1,14 @@
+version: '3.8'  # 使用 Docker Compose v3.8
+
+services:
+  backend:  # 服務名稱，可以叫任意名稱
+    build: .  # 使用當前目錄下的 Dockerfile 來建構映像
+    container_name: my-backend  # 容器的名稱，方便之後管理或進入
+    ports:
+      - "3000:3000"  # 映射主機的 3000 埠到容器內的 3000 埠
+    volumes:
+      - .:/app  # 將目前資料夾掛載到容器的 /app（開發時能即時看到程式改動）
+      - /app/node_modules  # 避免 node_modules 被主機上的覆蓋（重要！）
+    env_file:
+      - .env  # 將 .env 檔案載入環境變數
+    restart: unless-stopped  # 容器當掉會重啟，但如果是手動停止就不會重啟
