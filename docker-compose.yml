@@ -1,16 +1,33 @@
-version: '3.8'  # 使用 Docker Compose 版本 3.8
+version: '3.8'  # 使用 Docker Compose 的版本，3.8 是目前廣泛支援的穩定版本
 
-services:
-  backend:  # 服務名稱，可自訂
-    build:
-      context: .  # 建置映像使用當前資料夾
-      dockerfile: Dockerfile.dev  # 使用開發用的 Dockerfile
-    container_name: my-backend  # 指定容器名稱
+services:  # 定義所有服務（containers）
+
+  backend:  # 第一個服務：Node.js/Express 後端
+    build: .  # 從當前目錄的 Dockerfile 建立映像
+    container_name: my-backend  # 容器的名稱（自訂，方便記）
     ports:
-      - "3000:3000"  # 將本機的 3000 埠對應到容器的 3000 埠
+      - "3000:3000"  # 將主機的 3000 port 映射到容器內部的 3000 port
     volumes:
-      - .:/app  # 將當前專案資料夾掛載到容器內，程式碼變動能即時反應
-      - /app/node_modules  # 確保 node_modules 使用容器內部的，不會被主機覆蓋
+      - .:/app  # 把本機的專案資料夾掛載到容器中（可以即時看到程式碼更新）
+      - /app/node_modules  # 確保 node_modules 使用容器內的版本，不被主機蓋掉
     env_file:
-      - .env  # 讀取 .env 檔案載入環境變數
-    restart: unless-stopped  # 自動重啟容器（除非你手動停止）
+      - .env  # 載入 .env 檔案的環境變數（供程式內使用）
+    depends_on:
+      - db  # 等待 db 容器啟動後才啟動 backend，確保資料庫可連線
+    restart: unless-stopped  # 自動重啟容器，除非你手動停止（適合開發模式）
+
+  db:  # 第二個服務：PostgreSQL 資料庫
+    image: postgres:15  # 使用官方 PostgreSQL 15 映像檔
+    container_name: postgres-db  # 容器名稱
+    ports:
+      - "5432:5432"  # 將主機的 5432 port 映射到容器內的 PostgreSQL port
+    environment:
+      POSTGRES_USER: sportify       # 預設建立的資料庫使用者
+      POSTGRES_PASSWORD: letsgo     # 使用者密碼
+      POSTGRES_DB: sportifydb       # 預設建立的資料庫名稱
+    volumes:
+      - pgdata:/var/lib/postgresql/data  # 儲存資料庫資料的 volume，確保資料不會因重啟而遺失
+    restart: unless-stopped  # 自動重啟容器（如 PostgreSQL crash 時）
+
+volumes:
+  pgdata:  # 定義名為 pgdata 的 volume，供資料庫使用（存在本機）
