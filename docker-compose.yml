@@ -15,6 +15,7 @@ services:  # 定義所有服務（containers）
     depends_on:
       - db  # 等待 db 容器啟動後才啟動 backend，確保資料庫可連線
     restart: unless-stopped  # 自動重啟容器，除非你手動停止（適合開發模式）
+    command: npm run dev # run nodemon
 
   db:  # 第二個服務：PostgreSQL 資料庫
     image: postgres:15  # 使用官方 PostgreSQL 15 映像檔
