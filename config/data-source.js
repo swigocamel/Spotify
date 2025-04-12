@@ -2,6 +2,8 @@
 const { DataSource } = require("typeorm");
 require("dotenv").config();
 
+const User = require("../entities/User");
+
 const AppDataSource = new DataSource({
   type: "postgres",
   host: process.env.DB_HOST,
@@ -11,7 +13,9 @@ const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: true, // 開發用，自動建立資料表（正式環境建議 false）
   logging: true,
-  entities: [__dirname + "/../entities/*.js"],
+  entities: [
+    User
+  ],
   migrations: [],
   subscribers: [],
 });

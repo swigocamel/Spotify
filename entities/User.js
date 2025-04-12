@@ -1,7 +1,7 @@
 // entities/User.js
-import { EntitySchema } from 'typeorm';
+const { EntitySchema } = require("typeorm");
 
-export default new EntitySchema({
+module.exports = new EntitySchema({
   name: 'User',
   tableName: 'users',
   columns: {
@@ -29,7 +29,7 @@ export default new EntitySchema({
     },
     subscription_id: {
       type: 'uuid',
-      nullable: false,
+      nullable: true,
     },
     is_subscribed: {
       type: 'boolean',
