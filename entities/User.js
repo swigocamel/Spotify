@@ -1,21 +1,55 @@
-// src/entities/User.js
-const { EntitySchema } = require("typeorm");
+// entities/User.js
+import { EntitySchema } from 'typeorm';
 
-module.exports = new EntitySchema({
-  name: "User",
-  tableName: "users",
+export default new EntitySchema({
+  name: 'User',
+  tableName: 'users',
   columns: {
     id: {
+      type: 'uuid',
       primary: true,
-      type: "int",
-      generated: true,
+      nullable: false,
+      generated: 'uuid',
     },
-    username: {
-      type: "varchar",
+    name: {
+      type: 'varchar',
+      length: 50,
+      nullable: false,
     },
     email: {
-      type: "varchar",
+      type: 'varchar',
+      length: 320,
+      nullable: false,
       unique: true,
+    },
+    password: {
+      type: 'varchar',
+      length: 72,
+      nullable: false,
+    },
+    subscription_id: {
+      type: 'uuid',
+      nullable: false,
+    },
+    is_subscribed: {
+      type: 'boolean',
+      nullable: false,
+      default: false,
+    },
+    profile_image_url: {
+      type: 'varchar',
+      length: 2048,
+      nullable: true,
+    },
+    created_at: {
+      type: 'timestamp',
+      nullable: false,
+      createDate: true,
+    },
+    update_at: {
+      type: 'timestamp',
+      nullable: false,
+      updateDate: true,
     },
   },
 });
