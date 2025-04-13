@@ -5,6 +5,6 @@ const userController = require('../controllers/userController');
 const handleErrorAsync = require('../utils/handleErrorAsync');
 
 router.post('/auth/signup', handleErrorAsync(userController.postSignUp));
-router.get('/user-list', handleErrorAsync(userController.getUserList));
+router.get('/list', handleErrorAsync(userController.getUserList));
 
 module.exports = router;
