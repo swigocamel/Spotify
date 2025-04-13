@@ -28,4 +28,14 @@ app.use('/api/users', userRouter);
 
 connectDB();  // 啟動時初始化 DB
 
+app.use((err, req, res, next) => {
+    if (req.log) { // 確保 req.log 存在
+      req.log.error(err)
+    }
+    res.status(500).json({
+      status: false,
+      message: '伺服器錯誤'
+    })
+  })
+  
 module.exports = app;
