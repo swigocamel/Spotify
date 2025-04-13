@@ -51,6 +51,27 @@ const userController = {
                 }
             }, 
         });
+    },
+
+    async getUserList (req, res, next) {
+        // get all user list from User schema
+        const userRepo = AppDataSource.getRepository(User);
+        const users = await userRepo.find();
+        const userList = users.map(user => ({
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            created_at: user.created_at,
+            updated_at: user.updated_at
+        }))
+
+        // return data result
+        res.status(200).json({
+            status: true,
+            data: {
+                userList
+            }
+        })
     }
 }
 
