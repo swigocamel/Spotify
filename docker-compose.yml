@@ -9,7 +9,8 @@ services:  # 定義所有服務（containers）
       - "3000:3000"  # 將主機的 3000 port 映射到容器內部的 3000 port
     volumes:
       - .:/app  # 把本機的專案資料夾掛載到容器中（可以即時看到程式碼更新）
-      - /app/node_modules  # 確保 node_modules 使用容器內的版本，不被主機蓋掉
+      # - /app/node_modules  # 確保 node_modules 使用容器內的版本，不被主機蓋掉
+      - node_modules:/app/node_modules  # 使用 Docker volume 儲存 node_modules，避免與主機衝突
     env_file:
       - .env  # 載入 .env 檔案的環境變數（供程式內使用）
     depends_on:
@@ -32,3 +33,5 @@ services:  # 定義所有服務（containers）
 
 volumes:
   pgdata:  # 定義名為 pgdata 的 volume，供資料庫使用（存在本機）
+  node_modules: # 定義名為 node_modules 的 volume，供 Node.js 使用（存在本機）
+
