@@ -2,6 +2,8 @@
 const AppDataSource = require("../config/data-source");
 const User = require("../entities/User");
 const { IsValidString, IsValidEmail, IsValidPassword } = require("../utils/validation");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
 exports.postSignUp = async (req, res) => {
     // 從body取得資料並存入資料庫user schema 然後回傳201
@@ -34,7 +36,8 @@ exports.postSignUp = async (req, res) => {
     });
     }
 
-    const user = userRepo.create({ name, email, password });
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const user = userRepo.create({ name, email, password: hashedPassword });
     await userRepo.save(user);
 
     res.status(201).json({
