@@ -4,6 +4,7 @@ const User = require("../entities/User");
 const { IsValidString, IsValidEmail, IsValidPassword } = require("../utils/validation");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+const jwt = require("jsonwebtoken");
 
 const userController = {
     async postSignUp (req, res, next) {
@@ -70,6 +71,57 @@ const userController = {
             status: true,
             data: {
                 userList
+            }
+        })
+    },
+
+    async postLogin (req, res, next ) {
+        const { email, password } = req.body;
+
+        if (!IsValidString(email) || !IsValidEmail(email) || !IsValidString(password)) {
+            return res.status(400).json({
+                status: false,
+                message: '欄位未填寫正確',
+            })
+        }
+
+        const userRepo = AppDataSource.getRepository(User);
+        const user = await userRepo.findOne({ where: { email } });
+
+        if (!user) {
+            return res.status(401).json({
+                status: false,
+                message: '帳號或密碼錯誤',
+            })
+        }
+
+        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        if (!isPasswordMatch) {
+            return res.status(401).json({
+                status: false,
+                message: '密碼錯誤',
+            })
+        }
+
+        const token = jwt.sign(
+            {
+                id: user.id,
+                email: user.email,
+                name: user.name,
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '3d' }
+        );
+
+        res.status(200).json({
+            status: true,
+            data: {
+                token,
+                user: {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email
+                }
             }
         })
     }

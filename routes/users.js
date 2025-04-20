@@ -6,5 +6,6 @@ const handleErrorAsync = require('../utils/handleErrorAsync');
 
 router.post('/auth/signup', handleErrorAsync(userController.postSignUp));
 router.get('/list', handleErrorAsync(userController.getUserList));
+router.post('/auth/login', handleErrorAsync(userController.postLogin));
 
 module.exports = router;
