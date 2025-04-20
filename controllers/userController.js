@@ -124,6 +124,29 @@ const userController = {
                 }
             }
         })
+    },
+
+    async getUserProfile (req, res, next) {
+        const userRepo = AppDataSource.getRepository(User);
+        const user = await userRepo.findOne({ where: { id: req.user.id } });
+
+        if (!user) {
+            return res.status(400).json({
+                status: false,
+                message: '使用者不存在'
+            })
+        }
+
+        res.status(200).json({
+            status: true,
+            data: {
+                user: {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email
+                }
+            }
+        })
     }
 }
 
