@@ -13,6 +13,7 @@ require('dotenv').config();
 var indexRouter = require('./routes/index');
 var userRouter = require('./routes/users');
 var coachRouter = require('./routes/coaches');
+var testRouter = require('./routes/test');
 
 var app = express();
 
@@ -27,6 +28,7 @@ app.use(cors());
 app.use('/', indexRouter);
 app.use('/api/users', userRouter);
 app.use('/api/coaches', coachRouter);
+app.use('/api/test', testRouter);
 
 connectDB();  // 啟動時初始化 DB
 
