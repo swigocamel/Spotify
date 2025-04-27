@@ -1,5 +1,6 @@
 // src/middleware/authMiddleware.js
-const jwt = require('jsonwebtoken');
+const { verifyJWT } = require("../utils/jwtUtils"); // 用來生成 JWT token
+
 
 function authMiddleware (req, res, next) {
     const authHeader = req.headers.authorization;
@@ -15,7 +16,8 @@ function authMiddleware (req, res, next) {
     const token = authHeader.split(' ')[1];
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        // const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = verifyJWT(token); // 驗證 token
         req.user = decoded; // 將解碼的 token 資料存入 req.user
         next();
     } catch (err) {

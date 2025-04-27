@@ -1,5 +1,5 @@
 // 引入資料庫設定
-const AppDataSource = require("../config/data-source");
+const AppDataSource = require("../db/data-source");
 
 // 引入你定義好的資料表 Entity
 const User = require("../entities/User");

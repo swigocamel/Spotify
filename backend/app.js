@@ -6,11 +6,12 @@ var logger = require('morgan');
 const pino = require('pino')();
 const pinoHttp = require('pino-http')({ logger: pino });
 const cors = require('cors');
-const connectDB = require('./config/db');
+const connectDB = require('./db/connectDB');
 
 require('dotenv').config();
 
 var indexRouter = require('./routes/index');
+var authRouter = require('./routes/auth');
 var userRouter = require('./routes/users');
 var coachRouter = require('./routes/coaches');
 var testRouter = require('./routes/test');
@@ -26,6 +27,7 @@ app.use(pinoHttp);
 app.use(cors());
 
 app.use('/', indexRouter);
+app.use('/api', authRouter);
 app.use('/api/users', userRouter);
 app.use('/api/coaches', coachRouter);
 app.use('/api/test', testRouter);
