@@ -24,9 +24,9 @@ services:  # 定義所有服務（containers）
     ports:
       - "5432:5432"  # 將主機的 5432 port 映射到容器內的 PostgreSQL port
     environment:
-      POSTGRES_USER: sportify       # 預設建立的資料庫使用者
-      POSTGRES_PASSWORD: letsgo     # 使用者密碼
-      POSTGRES_DB: sportifydb       # 預設建立的資料庫名稱
+      POSTGRES_USER: DB_USER       # 預設建立的資料庫使用者
+      POSTGRES_PASSWORD: DB_PASS     # 使用者密碼
+      POSTGRES_DB: DB_NAME       # 預設建立的資料庫名稱
     volumes:
       - pgdata:/var/lib/postgresql/data  # 儲存資料庫資料的 volume，確保資料不會因重啟而遺失
     restart: unless-stopped  # 自動重啟容器（如 PostgreSQL crash 時）
