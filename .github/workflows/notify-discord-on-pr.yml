@@ -1,0 +1,28 @@
+name: Notify Discord on Pull Request
+
+on:
+  pull_request:
+    types: [opened, closed]
+
+jobs:
+  send-discord-message:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send PR notification to Discord
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          if [ "${{ github.event.action }}" == "opened" ]; then
+            ACTION_MSG="📬 **New Pull Request Opened!**"
+          elif [ "${{ github.event.action }}" == "closed" ]; then
+            ACTION_MSG="✅ **Pull Request Closed!**"
+          else
+            ACTION_MSG="🔔 Pull Request Event"
+          fi
+
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d "{
+            \"content\": \"$ACTION_MSG\\n🔗 [View PR](${{ github.event.pull_request.html_url }})\\n📄 Title: *${{ github.event.pull_request.title }}*\\n👤 Author: **${{ github.event.pull_request.user.login }}**\"
+          }" \
+          $DISCORD_WEBHOOK_URL
